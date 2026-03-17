@@ -4,7 +4,7 @@
     "title": "Btool Check for Splunk",
     "id": {
       "group": null,
-      "name": "TA-btool-check",
+      "name": "TA_btool_check",
       "version": "1.0.0"
     },
     "author": [
