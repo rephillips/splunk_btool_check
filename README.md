@@ -73,7 +73,7 @@ Show only invalid keys (exclude typos and info messages):
 
 ## Requirements
 
-- Splunk Enterprise 8.x, 9.x, or 10.x
+- Splunk Enterprise and Splunk Cloud 8.x, 9.x, or 10.x
 - Admin or sc_admin role (or a role with the `run_btool_check` capability)
 
 ## Permissions
