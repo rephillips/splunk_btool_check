@@ -1,0 +1,207 @@
+<dashboard version="1.1">
+  <label>Btool Check - Usage Guide</label>
+  <description>How to use the btoolcheck search command</description>
+
+  <!-- Row 1: Overview -->
+  <row>
+    <panel>
+      <html>
+        <style>
+          .btool-guide h2 { color: #333; margin-top: 0; }
+          .btool-guide p { font-size: 14px; line-height: 1.6; color: #555; }
+          .btool-guide .highlight { background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px 16px; border-radius: 4px; margin: 12px 0; }
+          .btool-guide code { background: #1a1a2e; color: #00d4aa; padding: 3px 8px; border-radius: 4px; font-family: 'SF Mono', 'Consolas', 'Monaco', monospace; font-size: 13px; }
+          .btool-guide .search-block { background: #1a1a2e; color: #00d4aa; padding: 14px 18px; border-radius: 6px; font-family: 'SF Mono', 'Consolas', 'Monaco', monospace; font-size: 14px; margin: 10px 0; border: 1px solid #2d2d4a; }
+          .btool-guide .section-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 8px; border-bottom: 2px solid #00d4aa; padding-bottom: 6px; display: inline-block; }
+          .btool-guide .field-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+          .btool-guide .field-table th { background: #1a1a2e; color: #00d4aa; padding: 10px 14px; text-align: left; font-size: 13px; }
+          .btool-guide .field-table td { padding: 8px 14px; border-bottom: 1px solid #e0e0e0; font-size: 13px; color: #444; }
+          .btool-guide .field-table tr:nth-child(even) { background: #f8f9fa; }
+          .btool-guide .field-table td:first-child { font-family: 'SF Mono', 'Consolas', 'Monaco', monospace; color: #1a1a2e; font-weight: 500; }
+          .btool-guide .perm-box { background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; padding: 14px 18px; }
+          .btool-guide .note-box { background: #e3f2fd; border: 1px solid #90caf9; border-radius: 6px; padding: 14px 18px; }
+          .btool-guide ul { padding-left: 20px; }
+          .btool-guide li { font-size: 14px; line-height: 1.8; color: #555; }
+        </style>
+        <div class="btool-guide">
+          <h2>Btool Check for Splunk</h2>
+          <p>
+            This app wraps the <code>splunk btool check</code> CLI command as a custom search command.
+            Identify typos and invalid keys in your <code>.conf</code> files directly from the Splunk search bar.
+          </p>
+          <div class="highlight">
+            <strong>Why does this exist?</strong> Splunk Cloud customers cannot access the CLI to run
+            <code>splunk btool check</code>. This app brings that functionality into the search bar
+            so you can validate your configuration files without needing shell access.
+          </div>
+        </div>
+      </html>
+    </panel>
+  </row>
+
+  <!-- Row 2: Basic Usage -->
+  <row>
+    <panel>
+      <html>
+        <div class="btool-guide">
+          <div class="section-title">Check All Configuration Files</div>
+          <p>Run a global check across every <code>.conf</code> file on the system:</p>
+          <div class="search-block">| btoolcheck</div>
+          <p>This returns one event per line of btool output, with structured fields extracted automatically.</p>
+        </div>
+      </html>
+    </panel>
+    <panel>
+      <html>
+        <div class="btool-guide">
+          <div class="section-title">Filter by Conf File</div>
+          <p>Show only issues from a specific conf file type (without the <code>.conf</code> extension):</p>
+          <div class="search-block">| btoolcheck conf=savedsearches</div>
+          <p>Other examples: <code>conf=props</code>, <code>conf=transforms</code>, <code>conf=inputs</code></p>
+        </div>
+      </html>
+    </panel>
+  </row>
+
+  <!-- Row 3: More Filters -->
+  <row>
+    <panel>
+      <html>
+        <div class="btool-guide">
+          <div class="section-title">Filter by App</div>
+          <p>Show only issues from a specific Splunk app:</p>
+          <div class="search-block">| btoolcheck app=Splunk_TA_windows</div>
+          <p>The app name is matched against the file path in each line of output.</p>
+        </div>
+      </html>
+    </panel>
+    <panel>
+      <html>
+        <div class="btool-guide">
+          <div class="section-title">Combine Both Filters</div>
+          <p>Narrow results to a specific conf file within a specific app:</p>
+          <div class="search-block">| btoolcheck conf=props app=Splunk_TA_windows</div>
+          <p>Both filters are applied together, showing only matching results.</p>
+        </div>
+      </html>
+    </panel>
+  </row>
+
+  <!-- Row 4: Example Searches -->
+  <row>
+    <panel>
+      <html>
+        <div class="btool-guide">
+          <div class="section-title">Example Searches</div>
+          <p>Once you have results, you can pipe them into any Splunk search command for analysis:</p>
+
+          <p><strong>Issues grouped by app and type:</strong></p>
+          <div class="search-block">| btoolcheck | stats count by app_name message_type</div>
+
+          <p><strong>Find issues in a specific app:</strong></p>
+          <div class="search-block">| btoolcheck | search app_name="my_custom_app"</div>
+
+          <p><strong>Show only invalid keys (exclude typos and info messages):</strong></p>
+          <div class="search-block">| btoolcheck | search message_type="Invalid key"</div>
+
+          <p><strong>Show only typos with suggestions:</strong></p>
+          <div class="search-block">| btoolcheck | search message_type="Possible typo" suggestion!=""</div>
+
+          <p><strong>Table view of all issues with key details:</strong></p>
+          <div class="search-block">| btoolcheck | table app_name conf_file_name stanza key_name message_type suggestion</div>
+        </div>
+      </html>
+    </panel>
+  </row>
+
+  <!-- Row 5: Output Fields -->
+  <row>
+    <panel>
+      <html>
+        <div class="btool-guide">
+          <div class="section-title">Output Fields Reference</div>
+          <p>Each event includes these fields, extracted best-effort from the btool output:</p>
+          <table class="field-table">
+            <tr>
+              <th>Field</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>message_type</td>
+              <td>Type of issue: "Invalid key", "Possible typo", or "No spec file"</td>
+            </tr>
+            <tr>
+              <td>stanza</td>
+              <td>The stanza name (e.g., [my_search]) where the issue was found</td>
+            </tr>
+            <tr>
+              <td>file_path</td>
+              <td>Full path to the .conf file containing the issue</td>
+            </tr>
+            <tr>
+              <td>line_number</td>
+              <td>Line number in the conf file where the issue occurs</td>
+            </tr>
+            <tr>
+              <td>key_name</td>
+              <td>The invalid or misspelled key name</td>
+            </tr>
+            <tr>
+              <td>value</td>
+              <td>The value associated with the invalid key</td>
+            </tr>
+            <tr>
+              <td>app_name</td>
+              <td>Splunk app name extracted from the file path</td>
+            </tr>
+            <tr>
+              <td>conf_file_name</td>
+              <td>The conf file type (e.g., "savedsearches", "props", "transforms")</td>
+            </tr>
+            <tr>
+              <td>suggestion</td>
+              <td>Suggested correction if available (e.g., "Did you mean 'disabled'?")</td>
+            </tr>
+          </table>
+        </div>
+      </html>
+    </panel>
+  </row>
+
+  <!-- Row 6: Permissions and Notes -->
+  <row>
+    <panel>
+      <html>
+        <div class="btool-guide">
+          <div class="section-title">Permissions</div>
+          <div class="perm-box">
+            <p style="margin-top: 0;">The <code>btoolcheck</code> command requires the <code>run_btool_check</code> capability.</p>
+            <p><strong>Granted by default to:</strong></p>
+            <ul>
+              <li><code>admin</code> role</li>
+              <li><code>sc_admin</code> role</li>
+            </ul>
+            <p style="margin-bottom: 0;">To grant access to other roles, add the <code>run_btool_check</code> capability in
+            <strong>Settings &gt; Access Controls &gt; Roles</strong>.</p>
+          </div>
+        </div>
+      </html>
+    </panel>
+    <panel>
+      <html>
+        <div class="btool-guide">
+          <div class="section-title">Notes</div>
+          <div class="note-box">
+            <ul style="margin-top: 0;">
+              <li><code>btool check</code> is a global operation. It checks all configuration files on the system in a single pass.</li>
+              <li>The <code>conf=</code> and <code>app=</code> parameters work by <strong>filtering the output</strong> of the global check. They do not run separate checks.</li>
+              <li>The app name is extracted from the file path in each line of output (e.g., <code>/etc/apps/my_app/...</code>).</li>
+              <li>Fields are extracted best-effort. If a pattern does not match a given line, that field will be empty, but the line is still emitted as an event.</li>
+            </ul>
+          </div>
+        </div>
+      </html>
+    </panel>
+  </row>
+
+</dashboard>

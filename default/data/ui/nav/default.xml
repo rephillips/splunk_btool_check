@@ -1,0 +1,4 @@
+<nav search_view="search">
+  <view name="btoolcheck_guide" default="true" />
+  <view name="search" />
+</nav>

@@ -1,0 +1,10 @@
+[]
+access = read : [ * ], write : [ admin, sc_admin ]
+export = system
+
+[commands/btoolcheck]
+access = read : [ admin, sc_admin ], write : [ admin, sc_admin ]
+export = system
+
+[searchbnf/btoolcheck-command]
+export = system
