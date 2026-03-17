@@ -104,11 +104,11 @@
           <p><strong>Show only invalid keys (exclude typos and info messages):</strong></p>
           <div class="search-block">| btoolcheck | search message_type="Invalid key"</div>
 
-          <p><strong>Show only typos with suggestions:</strong></p>
-          <div class="search-block">| btoolcheck | search message_type="Possible typo" suggestion!=""</div>
+          <p><strong>List invalid keys grouped by app and stanza:</strong></p>
+          <div class="search-block">| btoolcheck | stats values(key_name) by app_name stanza</div>
 
           <p><strong>Table view of all issues with key details:</strong></p>
-          <div class="search-block">| btoolcheck | table app_name conf_file_name stanza key_name message_type suggestion</div>
+          <div class="search-block">| btoolcheck | table app_name conf_file_name stanza key_name message_type value</div>
         </div>
       </html>
     </panel>
@@ -157,10 +157,6 @@
             <tr>
               <td>conf_file_name</td>
               <td>The conf file type (e.g., "savedsearches", "props", "transforms")</td>
-            </tr>
-            <tr>
-              <td>suggestion</td>
-              <td>Suggested correction if available (e.g., "Did you mean 'disabled'?")</td>
             </tr>
           </table>
         </div>
