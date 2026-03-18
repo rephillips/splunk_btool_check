@@ -80,10 +80,25 @@ Show only invalid keys (exclude typos and info messages):
 
 The `btoolcheck` command requires the `run_btool_check` capability, which is granted to the `admin` and `sc_admin` roles by default. To grant access to other roles, add the capability in **Settings > Access Controls > Roles**.
 
+## Troubleshooting
+
+- **"btoolcheck is not a valid search command"** — Restart Splunk after installing the app. Verify the app is enabled under **Apps > Manage Apps**.
+- **"You do not have permission to run this command"** — Your role needs the `run_btool_check` capability. Ask your Splunk admin to add it under **Settings > Access Controls > Roles**.
+- **Empty results** — No configuration issues were found. This is expected on a clean Splunk installation.
+- **Timeout on large environments** — The command runs `splunk btool check` across all apps. On instances with many apps, this may take longer. Use the `conf=` or `app=` parameters to narrow the scope.
+
+## External Data Sources
+
+This app does not call any external services or data sources. All operations run locally using the `splunk btool check` CLI command.
+
 ## Notes
 
 - `btool check` is a global operation — it does not support `--app` or per-conf-file arguments.
 - Both the `conf=` and `app=` parameters work by filtering the output of the global check. The app name is extracted from the file path in each line of output.
+
+## Support
+
+This app is developer supported. For issues, feature requests, or questions, please open an issue on [GitHub](https://github.com/rephillips/splunk_btool_check/issues).
 
 ## License
 
